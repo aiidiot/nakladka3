@@ -1,0 +1,300 @@
+<!DOCTYPE html>  
+<html lang="pl">  
+<head>  
+   <meta charset="UTF-8">  
+   <meta name="robots" content="noindex, nofollow">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+   <title>SklejkaMaker 2.0</title>  
+   <link rel="stylesheet" href="style.css">  
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script> 
+<script src="photo-search.js"></script>
+   
+</head>  
+<body>  
+<!-- Dodaj na samej górze strony, zaraz po <body> -->
+<div class="top-notice">
+    <span>⭐⭐⭐ Dodano wyszukiwarkę zdjęć z importem do Sklejki⭐⭐⭐</span>
+    <a href="#photoSearch" class="jump-button">Przewiń do wyszukiwarki ↓</a>
+</div>
+
+  
+   <div class="controls">  
+      <div class="control-group">  
+        <button class="btn active" data-shape="circle">Koło</button>  
+        <button class="btn" data-shape="square">Kwadrat</button>
+        <button class="btn" data-shape="sklejka">Sklejka</button>  
+        <button class="btn" data-shape="skos">Sklejka Skos</button>
+      </div>  
+  
+      <div class="control-group">  
+        <label>🔴 Kolor ramki (możesz ustwiać inne kolory):</label>  
+        <input type="color" id="borderColor" value="#FFFFFF">  
+        <div class="color-presets">  
+           <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
+           <button class="color-btn" data-color="#FF0000" style="background: #FF0000;"></button>  
+           <button class="color-btn" data-color="#000000" style="background: #000000;"></button>  
+           <button class="color-btn" data-color="#0066FF" style="background: #0066FF;"></button>  
+        </div>  
+      </div>  
+  
+      <div class="control-group">  
+        <label>🔴 Grubość ramki (wpisz 0 by zniknęła):</label>  
+        <input type="range" id="borderWidth" min="1" max="50" value="6">  
+        <input type="number" id="borderWidthInput" value="7" min="1" max="20"> px  
+      </div>  
+
+      <div class="control-group">  
+    <label>🔴 Obrót nakładki:</label>  
+    <input type="range" id="rotationAngle" min="0" max="360" value="0">  
+    <input type="number" id="rotationAngleInput" value="0" min="0" max="360"> stopni
+    <button class="btn" id="rotateLeft" title="Obróć w lewo o 22.5°">↺</button>
+    <button class="btn" id="rotateRight" title="Obróć w prawo o 22.5°">↻</button>
+</div> 
+  
+      <div class="control-group">  
+        <label>🔴 Wielkość nakładki:</label>  
+        <input type="range" id="overlaySize" min="90" max="450" value="200">  
+        <input type="number" id="overlaySizeInput" value="200" min="90" max="450"> px  
+      </div>  
+  
+      <div class="control-group">  
+        <label>  
+           <input type="checkbox" id="shadowToggle">  
+           🔴 Cień pod nakładką  
+        </label>  
+      </div>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>🔴 Zdjęcie główne:</label>  
+      <input type="file" id="mainImageInput" accept="image/*">
+      <input type="text" id="mainImageLink" placeholder="lub wklej link">  
+      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>🔴 Zdjęcie nakładki:</label>  
+      <input type="file" id="overlayImageInput" accept="image/*">
+      <input type="text" id="overlayImageLink" placeholder="lub wklej link">  
+   </div>
+
+   <div class="control-group">
+      <label>🔴 Biblioteka nakładek:</label>
+      <select id="overlayLibrary">
+          <option value="custom">Wskazana wyżej</option>
+          <option value="bez.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/bez.png">NAKŁADKĄ JEST SAMA RAMKA (koło lub kwadrat)</option>
+          <option value="kolo1.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/kolo1.png">kolo1.png</option>
+          <option value="kolo2.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/kolo2.png">kolo2.png</option>
+          <option value="strzalka1.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/strzalka1.png">strzalka1.png</option>
+          <option value="strzalka2.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/strzalka2.png">strzalka2.png</option>
+          <option value="naoczy1.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/naoczy1.png">naoczy1.png</option>
+          <option value="naoczy2.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/naoczy2.png">naoczy2.png</option>
+          <option value="pixelator.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/pixelator.png">pixelator.png</option>
+          <option value="zakresl.png" data-thumbnail="https://raw.githubusercontent.com/aiidiot/nakladka/main/zakresl.png">zakresl.png</option>
+      </select>
+   </div>
+   <br>
+   <div class="control-group">  
+      <label>🔴 Powiększ zdjęcie główne:</label>  
+      <input type="range" id="mainImageScale" min="100" max="300" value="100">  
+      <span>100%</span>  
+   </div>  
+
+   <div class="control-group">  
+      <label>🔴 Powiększ zdjęcie nakładki:</label>  
+      <input type="range" id="overlayImageScale" min="100" max="300" value="100">  
+      <span>100%</span>  
+   </div>  
+  
+   <div class="navigation-controls">  
+      <div class="nav-control">  
+        <span>🔴 Kadruj zdjęcie główne</span>  
+        <div class="nav-arrows" id="mainImageNav">  
+           <button class="arrow up">⬆️</button>  
+           <button class="arrow right">➡️</button>  
+           <button class="arrow down">⬇️</button>  
+           <button class="arrow left">⬅️</button>  
+        </div>  
+      </div>  
+  
+      <div class="nav-control">  
+        <span>🔴 Kadruj zdjęcie nakładki</span>  
+        <div class="nav-arrows" id="overlayImageNav">  
+           <button class="arrow up">⬆️</button>  
+           <button class="arrow right">➡️</button>  
+           <button class="arrow down">⬇️</button>  
+           <button class="arrow left">⬅️</button>  
+        </div>  
+      </div>  
+   </div>  
+
+   <div id="editorContainer">  
+      <div id="mainImageContainer">  
+        <img id="mainImage" alt="Główne zdjęcie">  
+      </div>  
+      <div id="shadow"></div>  
+      <div id="overlayContainer" class="circle">  
+        <img id="overlayImage" alt="Nakładka" style="aspect-ratio: 1/1;">  
+      </div>  
+   </div>  
+  
+   <div class="save-options">  
+      <button id="saveAsBtn" class="btn">Zapisz (plik się pobierze)...</button>  
+      <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
+   </div>  
+
+   <div class="control-group">
+      <label>🔴 Szablony:</label>
+      <select id="templateSelect" style="padding: 5px; min-width: 200px;">
+          <option value="default">🔴 Możesz wskazać zapisany przez siebie szablon</option>
+      </select>
+      <button id="loadTemplateBtn" class="btn">Wczytaj</button>
+      <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
+   </div>
+
+   <div class="control-group">
+      <label>🔴 Nazwa nowego szablonu:</label>
+      <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
+      <button id="saveTemplateBtn" class="btn">Zapisz bieżącą wielkość, pozycję i kolor nakładki jako szablon</button>
+   </div>
+
+   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 12px; font-family: Arial, sans-serif;">
+    SklejkaMaker by Robert VER 2.0
+    <br>
+    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Faiidiot.github.io%2Fnakladka&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=false"/>
+   </div>
+   
+   <script src="script.js"></script>  
+  <!-- HTML -->
+  
+  
+  <!-- Add this just before the closing </body> tag -->
+<!-- Zamień poprzedni kod wyszukiwarki na ten: -->
+<!-- Dodaj przed divem .photo-search-container -->
+<!-- Zaktualizowany nagłówek -->
+<div class="search-title">
+    <h2>Wyszukiwarka darmowych zdjęć</h2>
+    <div class="api-badges">
+        <span class="api-badge pexels">Pexels</span>
+        <span class="api-badge pixabay">Pixabay</span>
+    </div>
+<p class="search-subtitle"><strong class="highlight-text">Znajdź</strong> i <strong class="highlight-text">zaimportuj</strong> zdjęcia do SklejkaMaker</p>
+</div>
+
+<style>
+.search-title {
+    text-align: center;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    border-radius: 8px 8px 0 0;
+    margin-bottom: -20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-title h2 {
+    color: #2d3748;
+    font-size: 28px;
+    margin: 0;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: -0.5px;
+}
+
+.api-badges {
+    margin: 12px 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.api-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.api-badge.pexels {
+    background: #05a081;
+}
+
+.api-badge.pixabay {
+    background: #2ec66d;
+}
+
+.search-subtitle {
+    color: #718096;
+    margin: 10px 0 0;
+    font-size: 15px;
+}
+</style>
+<div class="photo-search-container">
+    <div class="search-controls">
+        <div class="search-bar">
+            <input type="text" id="photoSearch" placeholder="Wyszukaj zdjęcia...">
+            <select id="sourceSelect">
+                <option value="all">Wszystkie źródła</option>
+                <option value="pexels">Tylko Pexels</option>
+                <option value="pixabay">Tylko Pixabay</option>
+            </select>
+            <button id="photoSearchBtn" class="btn btn-primary">Szukaj</button>
+        </div>
+        <div id="photoSearchLoader" class="loader">Wyszukiwanie...</div>
+        <div id="photoSearchError" class="error"></div>
+    </div>
+
+    <div class="photo-gallery">
+        <div id="photoSideLeft" class="side-photos"></div>
+        <div class="main-content">
+            <div id="photoMainDisplay" class="main-photo-container"></div>
+            <div class="photo-navigation">
+                <button id="prevPhoto" class="btn">←</button>
+                <button id="prevPage" class="btn">Poprzednia strona</button>
+                <span id="photoPagination"></span>
+                <button id="nextPage" class="btn">Następna strona</button>
+                <button id="nextPhoto" class="btn">→</button>
+            </div>
+            <div id="photoCredits" class="photo-credits"></div>
+            <div class="photo-actions">
+                <button id="useAsMain" class="btn btn-primary">Użyj jako zdjęcie główne</button>
+                <button id="useAsOverlay" class="btn btn-primary">Użyj jako nakładkę</button>
+                <button id="downloadPhoto" class="btn">Zapisz zdjęcie</button>
+            </div>
+        </div>
+        <div id="photoSideRight" class="side-photos"></div>
+		
+    </div>
+</div>
+    <br> Wykonano bez znajomości programowania w 100 procentach przy pomocy: ChatGPT/Claude/Coopilot/Bito. Google Gemini nie chciało pomagać :)
+
+<button id="showSidebarBtn" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">Poznaj nowości</button>
+
+<!-- JavaScript -->
+<script>
+const sidebar = document.getElementById('sidebar');
+const showSidebarBtn = document.getElementById('showSidebarBtn');
+const closeBtn = document.getElementById('closeBtn');
+
+function openSidebar() {
+    sidebar.style.display = 'block';
+    showSidebarBtn.style.display = 'none';
+    // Automatyczne zamknięcie po 15 sekundach
+    setTimeout(closeSidebar, 15000);
+}
+
+function closeSidebar() {
+    sidebar.style.display = 'none';
+    showSidebarBtn.style.display = 'block';
+}
+
+// Event listenery
+showSidebarBtn.addEventListener('click', openSidebar);
+closeBtn.addEventListener('click', closeSidebar);
+
+// Pokaż sidebar przy starcie
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(openSidebar, 1000); // Pokaż po 1 sekundzie od załadowania strony
+});
+</script>
